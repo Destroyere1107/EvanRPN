@@ -4,9 +4,10 @@ namespace EvanRPN;
 // interact with the stack.
 
 /// <summary>
-///     This is the primary Engine of evanRPN. It is a stack-based calculator library following the architecture
-///     of traditional HP calculators and Postfix Notation.
-///     Note: in summaries for the class, please note that:
+///     This is the primary Engine of evanRPN. It is a wrapper around C#'s System classes, primarily
+///     System.Math and Stack in System.Collections. It is designed to
+///     follow the architecture of traditional HP calculators and Postfix Notation.
+///     Note: in summaries for the class' methods, please note that:
 ///     X (Value 1) = value at the top of the stack when an operation is performed
 ///     Y (Value 2) = value second from the top of the stack when an operation is performed
 ///     Z (Value 3) = value third from the top of the stack when an operation is performed
@@ -15,7 +16,13 @@ namespace EvanRPN;
 /// </summary>
 public class Engine
 {
+    /// <summary>
+    /// This private stack of doubles is where the Engine stores all its values.
+    /// All other methods manipulate or read the stack.
+    /// </summary>
     private readonly Stack<double> _stack = new();
+    
+    #region --- Stack Info ---
 
     /// <summary>
     ///     Returns the number of values on the stack.
@@ -26,9 +33,10 @@ public class Engine
     ///     Returns true when the stack is empty.
     /// </summary>
     public bool StackIsEmpty => _stack.Count == 0;
-
-    // --- STACK MANAGEMENT ---
-
+    
+    #endregion
+    
+    #region --- Stack Management ---
     /// <summary>
     ///     Returns a copy of the current stack as an IEnumerable<double> array.
     /// </summary>
@@ -121,7 +129,9 @@ public class Engine
         Drop();
     }
 
-    // --- ACTUAL MATH ---
+    #endregion
+    
+    #region --- Two-Value Arithmetic ---
 
     // Methods that manipulate two values:
 
@@ -216,8 +226,9 @@ public class Engine
             throw new ArithmeticException("Even root of a negative number. Complex numbers are not supported yet.");
         _stack.Push(Math.Pow(v, 1.0 / n));
     }
+    #endregion
 
-    // Methods that manipulate one value:
+    #region --- One-Value Functions ---
 
     /// <summary>
     ///     Negates X by multiplying it by -1.
@@ -292,8 +303,64 @@ public class Engine
     {
         Reciprocal();
     }
+    
+    #endregion
+    
+    #region --- Trigonometric Functions ---
+    
+    #region Basic Trig
 
-    // --- Constants ---
+    public void Sin()
+    {
+        var v = _stack.Pop();
+        _stack.Push(Math.Sin(v));
+    }
+    
+    public void Cos()
+    {
+        var v = _stack.Pop();
+        _stack.Push(Math.Cos(v));
+    }
+    
+    public void Tan()
+    {
+        var v = _stack.Pop();
+        _stack.Push(Math.Tan(v));
+    }
+    
+    #endregion
+
+    #region Inverse Trig
+
+    public void ArcSin()
+    {
+        var v = _stack.Pop();
+        _stack.Push(Math.Asin(v));
+    }
+
+    public void Asin() => ArcSin();
+    
+    public void ArcCos()
+    {
+        var v = _stack.Pop();
+        _stack.Push(Math.Acos(v));
+    }
+
+    public void Acos() => ArcCos();
+    
+    public void ArcTan()
+    {
+        var v = _stack.Pop();
+        _stack.Push(Math.Atan(v));
+    }
+
+    public void Atan() => ArcTan();
+    
+    #endregion
+    
+    #endregion
+   
+    #region --- Constants ---
 
     /// <summary>
     ///     Pushes the value of Pi (π) to the stack.
@@ -319,8 +386,10 @@ public class Engine
         const double Avogadro = 6.0221408e+23;
         _stack.Push(Avogadro);
     }
+    
+    #endregion
 
-    // --- Operator dispatch ---
+    #region --- Execute Function ---
 
     /// <summary>
     ///     Executes the specified operator token by performing the corresponding operation on the stack.
@@ -372,12 +441,15 @@ public class Engine
 
         return true;
     }
+    
+    #endregion
 
-    // --- Private helpers ---
+    #region --- Private helpers ---
 
     /// <summary>
     ///     Pops the two top values from the stack for operations that require two values.
-    ///     This is an internal function for use by the Engine.
+    ///     This is intended for internal use by the Engine, but if so needed one can use
+    ///     Engine.PopTwoExt().
     /// </summary>
     /// <param name="opName">The name of the operation requesting the values (for error reporting)</param>
     /// <returns>A tuple of the two topmost values from the stack, where the first element is the former top of the stack.</returns>
@@ -388,6 +460,17 @@ public class Engine
         var a = _stack.Pop();
         var b = _stack.Pop();
         return (a, b);
+    }
+    
+    /// <summary>
+    /// Pops the two top values from the stack for operations that require two values.
+    /// This is a publicly available alias for Engine.PopTwo().
+    /// </summary>
+    /// <param name="opName"></param>
+    /// <returns>A tuple of the two topmost values from the stack, where the first element is the former top of the stack.</returns>
+    public (double top, double second) PopTwoExt(string opName)
+    {
+        return PopTwo(opName);
     }
 
     /// <summary>
@@ -405,4 +488,6 @@ public class Engine
             throw new InvalidOperationException(
                 $"'{opName}' requires {needed} value(s) on the stack, but only {_stack.Count} present.");
     }
+    #endregion
 }
+    

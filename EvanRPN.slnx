@@ -1,0 +1,5 @@
+<Solution>
+    <Project Path="EvanRPN.csproj"/>
+    <Project Path="EvanRPN.Tests/EvanRPN.Tests.csproj"/>
+    <Project Path="manualtesting/manualtesting.csproj"/>
+</Solution>

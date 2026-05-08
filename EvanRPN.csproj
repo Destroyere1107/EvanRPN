@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>EvanRPN</RootNamespace>
+        <AssemblyName>EvanRPN</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="manualtesting\**"/>
+        <Compile Remove="EvanRPN.Tests\**"/>
+        <Compile Remove="destroyere.evanRPN.Tests\**"/>
+    </ItemGroup>
+
+</Project>

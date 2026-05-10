@@ -2,6 +2,9 @@
 
 A relatively simple and Reverse Polish Notation (RPN) engine implemented in C#.
 
+EvanRPN is mostly a wrapper around C#'s System classes, primarily System.Math and Stack in
+System.Collections, to make it easy to follow the architecture of traditional HP calculators and Postfix Notation.
+
 ## Features
 
 - **Basic Arithmetic**: Addition, Subtraction, Multiplication, Division, Modulo.
@@ -71,8 +74,8 @@ These are passed to the engine as text. See testconsole.cs for an example of how
 
 There are three csproj files included:
 
-| Project                    | Type          | Purpose                                                                         |
-|----------------------------|---------------|---------------------------------------------------------------------------------|
+| Project         | Type          | Purpose                                                                         |
+|-----------------|---------------|---------------------------------------------------------------------------------|
 | `EvanRPN`       | Library       | The `Engine` class (the whole library as of now).                               |
 | `EvanRPN.Tests` | xUnit tests   | Runs a variety of tests against the Engine.                                     |
-| `manualtesting`            | Console (Exe) | A simple REPL app that runs in the console, for manually testing/experimenting. |
+| `manualtesting` | Console (Exe) | A simple REPL app that runs in the console, for manually testing/experimenting. |

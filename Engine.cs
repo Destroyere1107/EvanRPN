@@ -193,7 +193,10 @@ public class Engine
     {
         Mod();
     }
-
+    
+    #endregion
+    
+    #region --- Exponent Math ---
 
     /// <summary>
     ///     Removes X and Y from the stack, computes Y raised to the Xth power, then pushes the result onto the stack.
@@ -214,6 +217,24 @@ public class Engine
     {
         Exp();
     }
+    
+    #endregion 
+    
+    #region --- Root Math ---
+    
+    /// <summary>
+    ///     Removes X from the stack, then pushes its square root.
+    ///     Engine.SquareRoot() is an alias.
+    /// </summary>
+    /// <exception cref="ArithmeticException"></exception>
+    public void Sqrt()
+    {
+        RequireStack(1, "sqrt");
+        var v = _stack.Pop();
+        if (v < 0)
+            throw new ArithmeticException("Square root of a negative number. Complex numbers are not supported yet.");
+        _stack.Push(Math.Sqrt(v));
+    }
 
     /// <summary>
     ///     Removes X and Y from the stack, computes the xth root of y, then pushes the result.
@@ -226,6 +247,27 @@ public class Engine
             throw new ArithmeticException("Even root of a negative number. Complex numbers are not supported yet.");
         _stack.Push(Math.Pow(v, 1.0 / n));
     }
+    #endregion
+    
+    #region --- Logarithms ---
+
+    public void Ln()
+    { 
+        RequireStack(1, "log");
+        var v = _stack.Pop();
+        _stack.Push(Math.Log(v));
+    }
+
+    /// <summary>
+    /// Computes the logarithm of Y to the specified base X.
+    /// </summary>
+    public void LogBase()
+    {
+        RequireStack(2, "logbase");
+        var (a, b) = PopTwo("logbase");
+        _stack.Push(Math.Log(b,a));
+    }
+    
     #endregion
 
     #region --- One-Value Functions ---
@@ -248,20 +290,6 @@ public class Engine
     public void Flip()
     {
         Negate();
-    }
-
-    /// <summary>
-    ///     Removes X from the stack, then pushes its square root.
-    ///     Engine.SquareRoot() is an alias.
-    /// </summary>
-    /// <exception cref="ArithmeticException"></exception>
-    public void Sqrt()
-    {
-        RequireStack(1, "sqrt");
-        var v = _stack.Pop();
-        if (v < 0)
-            throw new ArithmeticException("Square root of a negative number. Complex numbers are not supported yet.");
-        _stack.Push(Math.Sqrt(v));
     }
 
     /// <summary>
@@ -312,18 +340,21 @@ public class Engine
 
     public void Sin()
     {
+        RequireStack(1, "sin");
         var v = _stack.Pop();
         _stack.Push(Math.Sin(v));
     }
     
     public void Cos()
     {
+        RequireStack(1, "cos");
         var v = _stack.Pop();
         _stack.Push(Math.Cos(v));
     }
     
     public void Tan()
     {
+        RequireStack(1, "tan");
         var v = _stack.Pop();
         _stack.Push(Math.Tan(v));
     }
@@ -334,6 +365,7 @@ public class Engine
 
     public void ArcSin()
     {
+        RequireStack(1, "asin");
         var v = _stack.Pop();
         _stack.Push(Math.Asin(v));
     }
@@ -342,6 +374,7 @@ public class Engine
     
     public void ArcCos()
     {
+        RequireStack(1, "acos");
         var v = _stack.Pop();
         _stack.Push(Math.Acos(v));
     }
@@ -350,6 +383,7 @@ public class Engine
     
     public void ArcTan()
     {
+        RequireStack(1, "atan");
         var v = _stack.Pop();
         _stack.Push(Math.Atan(v));
     }
@@ -448,8 +482,7 @@ public class Engine
 
     /// <summary>
     ///     Pops the two top values from the stack for operations that require two values.
-    ///     This is intended for internal use by the Engine, but if so needed one can use
-    ///     Engine.PopTwoExt().
+    ///     This is intended for internal use by the Engine. Call Pop() twice if you need this.
     /// </summary>
     /// <param name="opName">The name of the operation requesting the values (for error reporting)</param>
     /// <returns>A tuple of the two topmost values from the stack, where the first element is the former top of the stack.</returns>
@@ -462,17 +495,6 @@ public class Engine
         return (a, b);
     }
     
-    /// <summary>
-    /// Pops the two top values from the stack for operations that require two values.
-    /// This is a publicly available alias for Engine.PopTwo().
-    /// </summary>
-    /// <param name="opName"></param>
-    /// <returns>A tuple of the two topmost values from the stack, where the first element is the former top of the stack.</returns>
-    public (double top, double second) PopTwoExt(string opName)
-    {
-        return PopTwo(opName);
-    }
-
     /// <summary>
     ///     Ensures that the stack contains the required number of elements before executing an operation.
     ///     This is an internal function for use by the Engine.

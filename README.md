@@ -2,13 +2,14 @@
 
 A relatively simple and Reverse Polish Notation (RPN) engine implemented in C#.
 
-EvanRPN is mostly a wrapper around C#'s System classes, primarily System.Math and Stack in
+EvanRPN is mostly a relatively simple wrapper around C#'s System classes, primarily System.Math and Stack in
 System.Collections, to make it easy to follow the architecture of traditional HP calculators and Postfix Notation.
 
 ## Features
 
 - **Basic Arithmetic**: Addition, Subtraction, Multiplication, Division, Modulo.
 - **Advanced Math**: Power (`^`), Roots (`xroot`), Square Root (`sqrt`), Absolute Value (`abs`), Reciprocal (`1/x`).
+- **Trigonometry**: Sin, Cos, and Tan, alongside their inverses, Asin, Acos, and Atan.
 - **Stack Manipulation**: Swap, Duplicate (`dup`), Drop, Clear.
 - **Constants**: Pi ($\pi$), Euler's number ($e$), and Avogadro's Number.
 - **Flexible Interface**: Support for both direct method calls and string-based command execution (for console
